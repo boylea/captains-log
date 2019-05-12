@@ -7,6 +7,11 @@ def log_list(request):
     print(request)
     if request.method == "POST":
         print(request.POST)
+        if 'delete_item' in request.POST:
+            post = get_object_or_404(LogItem, pk=request.POST['delete_item'])
+            post.delete()
+            return redirect('log_list')
+
         if 'update_item' in request.POST:
             post = get_object_or_404(LogItem, pk=request.POST['update_item'])
             form = LogItemForm(request.POST, instance=post)

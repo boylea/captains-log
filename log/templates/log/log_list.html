@@ -14,6 +14,7 @@
                     <form method="POST" id=edit_{{item.instance.pk}} class="edit-item-form" style="display: none;">{% csrf_token %}
                         {{ item }}
                         <button type="submit" class="save btn btn-default" onclick="hide({{item.instance.pk}})" name="update_item" value={{item.instance.pk}}>Save</button>
+                        <button type="submit" class="save btn btn-default" onclick="if (!confirm('Are you sure?')) return false;" name="delete_item" value={{item.instance.pk}}>Delete</button>
                     </form>
                 </div>
             {% endfor %}
