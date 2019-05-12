@@ -7,18 +7,33 @@
             <h1><a href="/">Captain's Log</a></h1>
         </div>
         <div>
-            {% for item in log_items %}
+            {% for item in existing_forms %}
                 <div>
-                    {{ item }}
-                    <a class="btn btn-default" href=""><span class="glyphicon glyphicon-pencil"></span>edit</a>
+                    <p id=title_{{item.instance.pk}} >{{ item.instance.text }}
+                    <a class="btn btn-default" href="javascript:unhide( {{item.instance.pk}} )"><span class="glyphicon glyphicon-pencil"></span>edit</a></p>
+                    <form method="POST" id=edit_{{item.instance.pk}} class="edit-item-form" style="display: none;">{% csrf_token %}
+                        {{ item }}
+                        <button type="submit" class="save btn btn-default" onclick="hide({{item.instance.pk}})" name="update_item" value={{item.instance.pk}}>Save</button>
+                    </form>
                 </div>
             {% endfor %}
         </div>
         <div>
             <form method="POST" class="new-item-form">{% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="save btn btn-default">Save</button>
+                {{ new_form.as_p }}
+                <button type="submit" class="save btn btn-default" name="new_item">Save</button>
             </form>
         </div>
     </body>
 </html>
+<script>function unhide(post_key)
+{
+    document.getElementById("edit_"+post_key).style.display="block";
+    document.getElementById("title_"+post_key).style.display="none";
+}
+function hide(post_key)
+{
+    document.getElementById("edit_"+post_key).style.display="none";
+    document.getElementById("title_"+post_key).style.display="block";
+}
+</script>
