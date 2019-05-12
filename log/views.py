@@ -20,5 +20,5 @@ def log_list(request):
         log_items = LogItem.objects.all();
         existing_forms = [LogItemForm(instance=li) for li in log_items]
         new_form = LogItemForm()
-        return render(request, 'log/log_list.html', {'log_items': log_items, 'new_form': new_form, 'existing_forms': existing_forms})
+        return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
 
