@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>Captain's Log</title>
+    </head>
+    <body>
+        <div>
+            <h1><a href="/">Captain's Log</a></h1>
+        </div>
+        <div>
+            {% for item in log_items %}
+                <div>
+                    {{ item }}
+                    <a class="btn btn-default" href=""><span class="glyphicon glyphicon-pencil"></span>edit</a>
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            <form method="POST" class="new-item-form">{% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+        </div>
+    </body>
+</html>
