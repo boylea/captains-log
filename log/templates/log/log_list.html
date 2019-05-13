@@ -22,6 +22,7 @@
                 {{ date.1 }}-{{ date.2 }}-{{ date.0 }}
                 <a class="btn btn-sm btn-light" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, -1)"><i class="fas fa-angle-left"></i></a>
                 <a class="btn btn-sm btn-light" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, 1)"><i class="fas fa-angle-right"></i></a>
+                <a class="btn btn-sm btn-light" href="javascript:today()">Today</a>
                 </header>
             </div>
         {% endif %}
@@ -64,6 +65,11 @@
         function next_day(year, month, day, delta){
             var current_day = new Date(year, month-1, day);
             current_day.setDate(current_day.getDate() + delta)
+            var url_mask = "{% url 'log_day' year=9999 month=1111 day=2222 %}".replace(/9999/, current_day.getFullYear()).replace(/1111/, current_day.getMonth()+1).replace(/2222/, current_day.getDate());
+            window.location.href = url_mask;
+        }
+        function today(){
+            var current_day = new Date();
             var url_mask = "{% url 'log_day' year=9999 month=1111 day=2222 %}".replace(/9999/, current_day.getFullYear()).replace(/1111/, current_day.getMonth()+1).replace(/2222/, current_day.getDate());
             window.location.href = url_mask;
         }
