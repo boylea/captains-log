@@ -19,10 +19,16 @@
         {% if date|length > 0 %}
             <div>
                 <header class="day-header">
+                <div class="d-flex align-items-center">
+                <div class="mr-auto p2" id="day-header">
                 {{ date.1 }}-{{ date.2 }}-{{ date.0 }}
+                </div>
+                <div class="p-2">
                 <a class="btn btn-sm btn-light" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, -1)"><i class="fas fa-angle-left"></i></a>
                 <a class="btn btn-sm btn-light" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, 1)"><i class="fas fa-angle-right"></i></a>
                 <a class="btn btn-sm btn-light" href="javascript:today()">Today</a>
+                </div>
+                </div>
                 </header>
             </div>
         {% endif %}
@@ -73,6 +79,11 @@
             var url_mask = "{% url 'log_day' year=9999 month=1111 day=2222 %}".replace(/9999/, current_day.getFullYear()).replace(/1111/, current_day.getMonth()+1).replace(/2222/, current_day.getDate());
             window.location.href = url_mask;
         }
+        (function insertDayOfWeek() {
+          var dayOfWeek = new Date({{date.0}},{{date.1}}-1,{{date.2}}).getDay();    
+          var day = isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+          document.getElementById("day-header").insertAdjacentText("afterbegin", day+", ");
+        })();
         </script>
     </body>
 </html>
