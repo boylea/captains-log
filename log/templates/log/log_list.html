@@ -6,6 +6,9 @@
         <div>
             <h1><a href="/">Captain's Log</a></h1>
         </div>
+        {% if date|length > 0 %}
+            {{ date.1 }}-{{ date.2 }}-{{ date.0 }}
+        {% endif %}
         <div>
             {% for item in existing_forms %}
                 <div>

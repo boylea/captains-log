@@ -12,7 +12,7 @@ def log_list(request):
     log_items = LogItem.objects.all();
     existing_forms = [LogItemForm(instance=li) for li in log_items]
     new_form = LogItemForm()
-    return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
+    return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms, 'date': []})
 
 def log_day(request, year, month, day):
     print(year, month, day)
@@ -23,7 +23,7 @@ def log_day(request, year, month, day):
 
     existing_forms = [LogItemForm(instance=li) for li in items_for_day]
     new_form = LogItemForm()
-    return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
+    return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms, 'date': (year, month, day)})
 
 def handle_post(request, date=None):
     print(request.POST)
