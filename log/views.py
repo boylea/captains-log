@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, get_object_or_404
 from .models import LogItem
 from .forms import LogItemForm
@@ -27,3 +29,10 @@ def log_list(request):
         new_form = LogItemForm()
         return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
 
+def log_day(request, year, month, day):
+    print(year, month, day)
+    items_for_day = LogItem.objects.filter(event_date__exact=datetime.date(year, month, day))
+
+    existing_forms = [LogItemForm(instance=li) for li in items_for_day]
+    new_form = LogItemForm()
+    return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
