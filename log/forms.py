@@ -1,10 +1,10 @@
 from django import forms
 
-from .models import LogItem
+from .models import LogEntry
 
-class LogItemForm(forms.ModelForm):
+class LogEntryForm(forms.ModelForm):
     text = forms.CharField(widget=forms.TextInput)
 
     class Meta:
-        model = LogItem
+        model = LogEntry
         fields = ('text',)

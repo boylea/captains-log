@@ -32,24 +32,24 @@
                 </header>
             </div>
         {% endif %}
-        <div class="item-list">
-            {% for item in existing_forms %}
+        <div class="entry-list">
+            {% for entry in existing_forms %}
                 <div>
-                    <p id=title_{{item.instance.pk}} >{{ item.instance.text }}
-                    <a class="btn btn-sm btn-light" href="javascript:unhide( {{item.instance.pk}} )"><i class="fas fa-edit"></i></a></p>
-                    <form method="POST" id=edit_{{item.instance.pk}} class="edit-item-form" style="display: none;">{% csrf_token %}
-                        {{ item }}
-                        <button type="submit" class="save btn btn-light" onclick="hide({{item.instance.pk}})" name="update_item" value={{item.instance.pk}}>Save</button>
-                        <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_item" value={{item.instance.pk}}>Delete</button>
+                    <p id=title_{{entry.instance.pk}} >{{ entry.instance.text }}
+                    <a class="btn btn-sm btn-light" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a></p>
+                    <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" style="display: none;">{% csrf_token %}
+                        {{ entry }}
+                        <button type="submit" class="save btn btn-light" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
+                        <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_entry" value={{entry.instance.pk}}>Delete</button>
                     </form>
                 </div>
             {% endfor %}
         </div>
         <div>
             <p>
-            <form method="POST" class="new-item-form">{% csrf_token %}
+            <form method="POST" class="new-entry-form">{% csrf_token %}
                 {{ new_form }}
-                <button type="submit" class="save btn btn-light" name="new_item">Save</button>
+                <button type="submit" class="save btn btn-light" name="new_entry">Save</button>
             </form>
             </p>
         </div>

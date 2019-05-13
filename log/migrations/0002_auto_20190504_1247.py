@@ -12,22 +12,22 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='logitem',
+            model_name='logentry',
             name='created_date',
         ),
         migrations.AddField(
-            model_name='logitem',
+            model_name='logentry',
             name='created_at',
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='logitem',
+            model_name='logentry',
             name='updated_at',
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='logitem',
+            model_name='logentry',
             name='event_date',
             field=models.DateField(default=django.utils.timezone.now),
         ),
