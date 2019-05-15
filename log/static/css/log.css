@@ -3,6 +3,15 @@
     background-color: whitesmoke;
 }
 
-.item-list {
-    padding-top: 15px;
+.new-entry-form {
+    border-top: 1px solid;
+    margin-top:0.5rem;
+}
+
+#id_text {
+    width: 50%
+}
+
+#new-entry-text {
+    width:100%;
 }
