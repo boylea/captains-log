@@ -14,6 +14,9 @@ def log_list(request):
     new_form = LogEntryForm()
     return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms, 'date': []})
 
+def home(request):
+    return render(request, 'log/home.html')
+
 def log_day(request, year, month, day):
     print(year, month, day)
     if request.method == "POST":
