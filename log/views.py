@@ -18,11 +18,11 @@ def home(request):
     return render(request, 'log/home.html')
 
 def log_day(request, year, month, day):
-    print(year, month, day)
+    print("user:", request.user.pk)
     if request.method == "POST":
         handle_post(request, (year, month, day))
 
-    entries_for_day = LogEntry.objects.filter(event_date__exact=datetime.date(year, month, day))
+    entries_for_day = LogEntry.objects.filter(event_date__exact=datetime.date(year, month, day), author=request.user)
 
     existing_forms = [LogEntryForm(instance=li) for li in entries_for_day]
     new_form = LogEntryForm()
@@ -42,6 +42,7 @@ def handle_post(request, date=None):
         form = LogEntryForm(request.POST)
     if form.is_valid():
         post = form.save(commit=False)
+        post.author = request.user
         if date:
             year, month, day = date
             post.event_date = datetime.date(year, month, day)
