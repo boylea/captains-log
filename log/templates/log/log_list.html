@@ -22,7 +22,7 @@
                 <div>
                     <p id=title_{{entry.instance.pk}} >{{ entry.instance.text }}
                     <a class="btn btn-sm btn-light" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a></p>
-                    <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" style="display: none;">{% csrf_token %}
+                    <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
                         {{ entry }}
                         <button type="submit" class="save btn btn-light" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
                         <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_entry" value={{entry.instance.pk}}>Delete</button>
@@ -44,11 +44,15 @@
 {% endblock %}
 
 {% block scripts %}
-
-(function insertDayOfWeek() {
+    function keyupEvent(e, pk) {
+        if(e.keyCode == 27){
+            hide(pk);
+        }
+    }
+    (function insertDayOfWeek() {
       var dayOfWeek = new Date({{date.0}},{{date.1}}-1,{{date.2}}).getDay();    
       var day = isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
-      document.getElementById("day-header").insertAdjacentText("afterbegin", day+", ");
+      document.getElementById("day-header").insertAdjacentText("afterbegin", day + ", ");
     })();
 
 {% endblock %}
