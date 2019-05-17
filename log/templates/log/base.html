@@ -37,8 +37,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>function unhide(post_key)
     {
-        document.getElementById("edit_"+post_key).style.display="block";
+        var edit_form = document.getElementById("edit_"+post_key);
+        edit_form.style.display="block";
         document.getElementById("title_"+post_key).style.display="none";
+        edit_form.tabIndex = 0
+        edit_form.focus();
     }
     function hide(post_key)
     {
