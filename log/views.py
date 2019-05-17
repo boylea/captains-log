@@ -1,9 +1,11 @@
+import csv
 import datetime
 
 from django.shortcuts import render, get_object_or_404
 from .models import LogEntry
 from .forms import LogEntryForm
 from django.shortcuts import redirect
+from django.http import HttpResponse
 
 def log_list(request):
     print(request)
@@ -47,3 +49,17 @@ def handle_post(request, date=None):
             year, month, day = date
             post.event_date = datetime.date(year, month, day)
         post.save()
+
+def csv_export(request):
+    all_log_entries = LogEntry.objects.filter(author=request.user)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="captains_log.csv"'
+
+    writer = csv.writer(response)
+    columns = [field.name for field in all_log_entries[0]._meta.get_fields()]
+    writer.writerow(columns)
+    for entry in all_log_entries:
+        row = [entry.serializable_value(name) for name in columns]
+        writer.writerow(row)
+
+    return response
