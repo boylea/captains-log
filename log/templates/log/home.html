@@ -5,4 +5,19 @@
 <a class="btn btn-sm btn-light" href="javascript:today()">Today</a>
 <a class="btn btn-sm btn-light" href="{% url 'csv_export' %}">Export Data</a>
 
+<form id="searchform" action="{% url 'search' %}" method="get">
+    <input type="text" name="q" type="text"/>
+    <button type="button" onclick="searchform.submit()">Search</button>
+</form>
+
+{% if entries|length > 0 %}
+    <p>Entries containing '{{query_string}}'</p> 
+    {% for entry in entries %}
+        <div>
+            <span> {{ entry.event_date }} </span>
+            <a href="{{ entry.event_date|date:'Y/m/d' }}">{{ entry.text }}</a>
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% endblock %}

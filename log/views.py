@@ -63,3 +63,14 @@ def csv_export(request):
         writer.writerow(row)
 
     return response
+
+
+def search(request):
+    query_string = ''
+    found_entries = None
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query_string = request.GET['q']
+        entries = LogEntry.objects.filter(text__icontains=query_string).order_by('event_date')
+        return render(request, 'log/home.html', { 'query_string': query_string, 'entries': entries })
+    else:
+        return render(request, 'log/home.html')
