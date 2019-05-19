@@ -12,7 +12,7 @@ with open(filename) as fh:
     reader = csv.reader(fh)
     columns = next(reader)
     print(columns)
-    desired_fields_idx = list(map(desired_fields.index, desired_fields))
+    desired_fields_idx = list(map(columns.index, desired_fields))
     print(desired_fields_idx)
     for row in reader:
         entry = {};
