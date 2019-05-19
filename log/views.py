@@ -61,7 +61,7 @@ def csv_export(request):
     columns = [field.name for field in all_log_entries[0]._meta.get_fields()]
     writer.writerow(columns)
     for entry in all_log_entries:
-        row = [entry.serializable_value(name) for name in columns]
+        row = [request.user.username if name=='author' else entry.serializable_value(name) for name in columns]
         writer.writerow(row)
 
     return response

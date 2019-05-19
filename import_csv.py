@@ -3,11 +3,9 @@ import csv
 from django.contrib.auth.models import User
 from log.models import LogEntry
 
-desired_fields = ['text', 'event_date', 'created_at']
-default_author = 'aboyle'
-author = User.objects.get(username=default_author);
+desired_fields = ['text', 'event_date', 'created_at', 'updated_at', 'author']
 
-filename='log.csv'
+filename='captains_log.csv'
 with open(filename) as fh:
     reader = csv.reader(fh)
     columns = next(reader)
@@ -18,8 +16,8 @@ with open(filename) as fh:
         entry = {};
         for field, idx in zip(desired_fields, desired_fields_idx):
             entry[field] = row[idx]
+
+        author = User.objects.get(username=entry['author']);
         entry['author'] = author;
-        entry['updated_at'] = entry['created_at'];
         print(entry)
         LogEntry.objects.create(**entry)
-
