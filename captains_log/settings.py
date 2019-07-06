@@ -25,7 +25,7 @@ SECRET_KEY = '-bi6c3_#z0rm6o+53me+d483np)x%cy(emd1rx%7@47-=@wy5f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['boylea.pythonanywhere.com', 'localhost']
+ALLOWED_HOSTS = ['boylea.pythonanywhere.com', 'localhost', 'captains-log.herokuapp.com']
 
 
 # Application definition
