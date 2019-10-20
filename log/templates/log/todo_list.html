@@ -5,10 +5,11 @@
             {% for entry in existing_forms %}
                 <div>
                     <p id=title_{{entry.instance.pk}}>{{ entry.instance.text }}
-                    {% if not entry.instance.completed_at %}
-                        <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
-                    {% else %}
+                    {% if entry.instance.completed_at or entry.instance.wont_do %}
                         <a class="btn btn-sm btn-primary" href="todo_undone/{{entry.instance.pk}}">UNDO</a>
+                    {% else %}
+                        <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
+                        <a class="btn btn-sm btn-primary" href="todo_wont/{{entry.instance.pk}}">WON'T DO</a>
                     {% endif %}
                     <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a>
                     <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}

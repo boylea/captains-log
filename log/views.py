@@ -6,6 +6,8 @@ from .models import LogEntry, ToDoEntry
 from .forms import LogEntryForm, ToDoForm
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.db.models import Q
+
 
 def log_list(request):
     print(request)
@@ -63,6 +65,15 @@ def todo_done(request, pk):
     else:
         return redirect('home')
 
+def todo_wont(request, pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(ToDoEntry, pk=pk)
+        post.mark_wont()
+        post.save()
+        return redirect('todo')
+    else:
+        return redirect('home')
+
 def todo_undone(request, pk):
     if request.user.is_authenticated:
         post = get_object_or_404(ToDoEntry, pk=pk)
@@ -77,7 +88,7 @@ def todo(request):
     if request.user.is_authenticated:
         if request.method == "POST":
             handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
-        unfinished_todos = ToDoEntry.objects.filter(completed_at__isnull=True, author=request.user)
+        unfinished_todos = ToDoEntry.objects.filter(completed_at__isnull=True, wont_do__isnull=True, author=request.user)
         existing_forms = [ToDoForm(instance=li) for li in unfinished_todos]
         new_form = ToDoForm()
         return render(request, 'log/todo_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
@@ -88,7 +99,7 @@ def done_todos(request):
     if request.user.is_authenticated:
         if request.method == "POST":
             handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
-        finished_todos = ToDoEntry.objects.filter(completed_at__isnull=False, author=request.user)
+        finished_todos = ToDoEntry.objects.filter(Q(completed_at__isnull=False) | Q(wont_do__isnull=False), author=request.user)
         existing_forms = [ToDoForm(instance=li) for li in finished_todos]
         return render(request, 'log/todo_list.html', {'existing_forms': existing_forms})
     else:
