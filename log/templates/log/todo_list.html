@@ -4,18 +4,15 @@
 <div class="entry-list pt-2">
             {% for entry in existing_forms %}
                 <div>
-                    <p id=title_{{entry.instance.pk}} >{{ entry.instance.text }}
-                    <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a></p>
+                    <p id=title_{{entry.instance.pk}}>{{ entry.instance.text }}
+                    <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
+                    <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a>
                     <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
                         {{ entry }}
                         <button type="submit" class="save btn btn-primary" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
                         <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_entry" value={{entry.instance.pk}}>Delete</button>
                     </form>
-                    <form method="POST" action="todo_done" class="inline">{% csrf_token %}
-                      <button type="submit" name="done" value={{entry.instance.pk}} class="link-button">
-                      DONE
-                      </button>
-                    </form>
+                    </p>
                 </div>
             {% endfor %}
         </div>

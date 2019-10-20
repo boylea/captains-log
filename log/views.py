@@ -53,13 +53,12 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
             post.event_date = datetime.date(year, month, day)
         post.save()
 
-def todo_done(request):
+def todo_done(request, pk):
     if request.user.is_authenticated:
         print(request.method)
-        if request.method == "POST":
-            post = get_object_or_404(ToDoEntry, pk=request.POST['done'])
-            post.mark_complete()
-            post.save()
+        post = get_object_or_404(ToDoEntry, pk=pk)
+        post.mark_complete()
+        post.save()
         return redirect('todo')
     else:
         return redirect('home')
