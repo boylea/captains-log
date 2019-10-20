@@ -40,13 +40,27 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
         post = get_object_or_404(klass, pk=request.POST['delete_entry'])
         post.delete()
         return
-
-    if 'update_entry' in request.POST:
+    elif 'update_entry' in request.POST:
         post = get_object_or_404(klass, pk=request.POST['update_entry'])
         form = formKlass(request.POST, instance=post)
-    else:
-        # create
+    elif 'mark_done' in request.POST:
+        post = get_object_or_404(klass, pk=request.POST['mark_done'])
+        post.mark_complete()
+        form = formKlass(request.POST, instance=post)
+    elif 'mark_wont' in request.POST:
+        post = get_object_or_404(klass, pk=request.POST['mark_wont'])
+        post.mark_wont()
+        form = formKlass(request.POST, instance=post)
+    elif 'undo' in request.POST:
+        post = get_object_or_404(klass, pk=request.POST['undo'])
+        post.unmark_complete()
+        form = formKlass(request.POST, instance=post)
+    elif 'new_entry' in request.POST:
         form = formKlass(request.POST)
+    else:
+        print("Found unknown post: ", request.POST)
+        return
+
     if form.is_valid():
         post = form.save(commit=False)
         post.author = request.user
@@ -54,35 +68,8 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
             year, month, day = date
             post.event_date = datetime.date(year, month, day)
         post.save()
-
-def todo_done(request, pk):
-    if request.user.is_authenticated:
-        post = get_object_or_404(ToDoEntry, pk=pk)
-        post.mark_complete()
-        post.save()
-        LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
-        return redirect('todo')
-    else:
-        return redirect('home')
-
-def todo_wont(request, pk):
-    if request.user.is_authenticated:
-        post = get_object_or_404(ToDoEntry, pk=pk)
-        post.mark_wont()
-        post.save()
-        return redirect('todo')
-    else:
-        return redirect('home')
-
-def todo_undone(request, pk):
-    if request.user.is_authenticated:
-        post = get_object_or_404(ToDoEntry, pk=pk)
-        post.unmark_complete()
-        post.save()
-        return redirect('done_todos')
-    else:
-        return redirect('home')
-
+        if 'mark_done' in request.POST:
+            LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
 
 def todo(request):
     if request.user.is_authenticated:

@@ -20,22 +20,30 @@
         </header>
     </div>
     <div class="entry-list pt-2">
+        <ul>
         {% for entry in existing_forms %}
             <div>
                 {% if entry.instance.wont_do %}
                 <s>
                 {% endif %}
-                <p id=title_{{entry.instance.pk}}>{{ entry.instance.text }}
+                <li id=title_{{entry.instance.pk}}>
+                {{ entry.instance.text }}
                 {% if entry.instance.wont_do %}
                 </s>
                 {% endif %}
                 {% if entry.instance.completed_at or entry.instance.wont_do %}
-                    <a class="btn btn-sm btn-primary" href="todo_undone/{{entry.instance.pk}}">UNDO</a>
+                    <form name="undo_form" method="post" style="display:inline">{% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-primary" name='undo' value={{entry.instance.pk}} style="display:inline">UNDO</button>
+                    </form>
                 {% elif entry.instance.completeable %}
-                    <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
-                    <a class="btn btn-sm btn-primary" href="todo_wont/{{entry.instance.pk}}">WON'T DO</a>
+                    <form name="done_form" method="post" style="display:inline">{% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-primary" name='mark_done' value={{entry.instance.pk}} style="display:inline">DONE</button>
+                    </form>
+                    <form name="done_form" method="post" style="display:inline">{% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-primary" name='mark_wont' value={{entry.instance.pk}} style="display:inline">WON'T DO</button>
+                    </form>
                 {% endif %}
-                <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a></p>
+                <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )" style="display:inline"><i class="fas fa-edit"></i></a></li>
                 <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
                     {{ entry }}
                     <button type="submit" class="save btn btn-primary" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
@@ -43,6 +51,7 @@
                 </form>
             </div>
         {% endfor %}
+        </ul>
     </div>
     <div class="row">
     <div class="col-6">
