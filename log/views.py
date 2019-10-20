@@ -55,13 +55,22 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
 
 def todo_done(request, pk):
     if request.user.is_authenticated:
-        print(request.method)
         post = get_object_or_404(ToDoEntry, pk=pk)
         post.mark_complete()
         post.save()
         return redirect('todo')
     else:
         return redirect('home')
+
+def todo_undone(request, pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(ToDoEntry, pk=pk)
+        post.unmark_complete()
+        post.save()
+        return redirect('done_todos')
+    else:
+        return redirect('home')
+
 
 def todo(request):
     if request.user.is_authenticated:
@@ -71,6 +80,16 @@ def todo(request):
         existing_forms = [ToDoForm(instance=li) for li in unfinished_todos]
         new_form = ToDoForm()
         return render(request, 'log/todo_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
+    else:
+        return redirect('home')
+
+def done_todos(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
+        finished_todos = ToDoEntry.objects.filter(completed_at__isnull=False, author=request.user)
+        existing_forms = [ToDoForm(instance=li) for li in finished_todos]
+        return render(request, 'log/todo_list.html', {'existing_forms': existing_forms})
     else:
         return redirect('home')
 

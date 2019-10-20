@@ -5,7 +5,11 @@
             {% for entry in existing_forms %}
                 <div>
                     <p id=title_{{entry.instance.pk}}>{{ entry.instance.text }}
-                    <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
+                    {% if not entry.instance.completed_at %}
+                        <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
+                    {% else %}
+                        <a class="btn btn-sm btn-primary" href="todo_undone/{{entry.instance.pk}}">UNDO</a>
+                    {% endif %}
                     <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a>
                     <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
                         {{ entry }}
@@ -18,6 +22,7 @@
         </div>
         <div class="row">
         <div class="col-6">
+        {% if new_form %}
             <p>
             <form method="POST" class="new-entry-form">{% csrf_token %}
                 <label for="{{ new_form.text.id_for_label }}">New Entry:</label>
@@ -25,5 +30,6 @@
                 <button type="submit" class="save btn btn-primary" name="new_entry">Save</button>
             </form>
             </p>
+        {% endif %}
         </div>
 {% endblock %}

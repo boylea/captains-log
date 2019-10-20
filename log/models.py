@@ -25,5 +25,9 @@ class ToDoEntry(models.Model):
         self.completed_at = timezone.now()
         self.save()
 
+    def unmark_complete(self):
+        self.completed_at = None
+        self.save()
+
     def __str__(self):
         return self.text
