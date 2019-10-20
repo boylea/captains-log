@@ -1,26 +1,40 @@
 {% extends 'log/base.html' %}
 
 {% block content %}
-    {% if date|length > 0 %}
-        <div>
-            <header class="day-header">
-            <div class="d-flex align-items-center">
+    <div>
+        <header class="day-header">
+        <div class="d-flex align-items-center">
+        {% if date|length > 0 %}
             <div class="mr-auto p-2" id="day-header">
             {{ date.1 }}-{{ date.2 }}-{{ date.0 }}
             </div>
-            <div class="p-2">
+        {% endif %}
+        <div class="p-2">
+        {% if date|length > 0 %}
             <a class="btn btn-sm btn-primary" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, -1)"><i class="fas fa-angle-left"></i></a>
             <a class="btn btn-sm btn-primary" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, 1)"><i class="fas fa-angle-right"></i></a>
             <a class="btn btn-sm btn-primary" href="javascript:today()">Today</a>
-            </div>
-            </div>
-            </header>
+        {% endif %}
         </div>
-    {% endif %}
+        </div>
+        </header>
+    </div>
     <div class="entry-list pt-2">
         {% for entry in existing_forms %}
             <div>
-                <p id=title_{{entry.instance.pk}} >{{ entry.instance.text }}
+                {% if entry.instance.wont_do %}
+                <s>
+                {% endif %}
+                <p id=title_{{entry.instance.pk}}>{{ entry.instance.text }}
+                {% if entry.instance.wont_do %}
+                </s>
+                {% endif %}
+                {% if entry.instance.completed_at or entry.instance.wont_do %}
+                    <a class="btn btn-sm btn-primary" href="todo_undone/{{entry.instance.pk}}">UNDO</a>
+                {% elif entry.instance.completeable %}
+                    <a class="btn btn-sm btn-primary" href="todo_done/{{entry.instance.pk}}">DONE</a>
+                    <a class="btn btn-sm btn-primary" href="todo_wont/{{entry.instance.pk}}">WON'T DO</a>
+                {% endif %}
                 <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )"><i class="fas fa-edit"></i></a></p>
                 <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
                     {{ entry }}
@@ -49,10 +63,13 @@
             hide(pk);
         }
     }
+
+    {% if date|length > 0 %}
     (function insertDayOfWeek() {
       var dayOfWeek = new Date({{date.0}},{{date.1}}-1,{{date.2}}).getDay();    
       var day = isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
       document.getElementById("day-header").insertAdjacentText("afterbegin", day + ", ");
     })();
+    {% endif %}
 
 {% endblock %}

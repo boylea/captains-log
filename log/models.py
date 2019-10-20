@@ -9,6 +9,7 @@ class LogEntry(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bullshit_name')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    completeable = False
 
     def __str__(self):
         return self.text
@@ -20,6 +21,7 @@ class ToDoEntry(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    completeable = True
 
     def mark_complete(self):
         self.completed_at = timezone.now()
