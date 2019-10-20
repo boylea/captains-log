@@ -58,6 +58,7 @@ def todo_done(request, pk):
         post = get_object_or_404(ToDoEntry, pk=pk)
         post.mark_complete()
         post.save()
+        LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
         return redirect('todo')
     else:
         return redirect('home')
