@@ -4,16 +4,25 @@
     <div>
         <header class="day-header">
         <div class="d-flex align-items-center">
+        <div class="mr-auto p-2" id="day-header">
         {% if date|length > 0 %}
-            <div class="mr-auto p-2" id="day-header">
             {{ date.1 }}-{{ date.2 }}-{{ date.0 }}
-            </div>
         {% endif %}
+        {% if title %}
+            {{ title }}
+        {% endif %}
+        </div>
         <div class="p-2">
         {% if date|length > 0 %}
             <a class="btn btn-sm btn-primary" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, -1)"><i class="fas fa-angle-left"></i></a>
             <a class="btn btn-sm btn-primary" href="javascript:next_day({{date.0}},{{date.1}},{{date.2}}, 1)"><i class="fas fa-angle-right"></i></a>
             <a class="btn btn-sm btn-primary" href="javascript:today()">Today</a>
+        {% else %}
+            {% if request.path == "/todo" %}
+                <a class="btn btn-sm btn-primary" href="{% url 'done_todos' %}">Done Todos</a>
+            {% else %}
+                <a class="btn btn-sm btn-primary" href="{% url 'todo' %}">Still todo</a>
+            {% endif %}
         {% endif %}
         </div>
         </div>

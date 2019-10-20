@@ -78,7 +78,7 @@ def todo(request):
         unfinished_todos = ToDoEntry.objects.filter(completed_at__isnull=True, wont_do__isnull=True, author=request.user)
         existing_forms = [ToDoForm(instance=li) for li in unfinished_todos]
         new_form = ToDoForm()
-        return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
+        return render(request, 'log/log_list.html', {'new_form': new_form, 'existing_forms': existing_forms, 'title': "Todo"})
     else:
         return redirect('home')
 
@@ -88,7 +88,7 @@ def done_todos(request):
             handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
         finished_todos = ToDoEntry.objects.filter(Q(completed_at__isnull=False) | Q(wont_do__isnull=False), author=request.user)
         existing_forms = [ToDoForm(instance=li) for li in finished_todos]
-        return render(request, 'log/log_list.html', {'existing_forms': existing_forms})
+        return render(request, 'log/log_list.html', {'existing_forms': existing_forms, 'title': "Past Todos"})
     else:
         return redirect('home')
 
