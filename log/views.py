@@ -2,8 +2,8 @@ import csv
 import datetime
 
 from django.shortcuts import render, get_object_or_404
-from .models import LogEntry
-from .forms import LogEntryForm
+from .models import LogEntry, ToDoEntry
+from .forms import LogEntryForm, ToDoForm
 from django.shortcuts import redirect
 from django.http import HttpResponse
 
@@ -32,18 +32,19 @@ def log_day(request, year, month, day):
     else:
         return redirect('home')
 
-def handle_post(request, date=None):
+def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
     print(request.POST)
     if 'delete_entry' in request.POST:
-        post = get_object_or_404(LogEntry, pk=request.POST['delete_entry'])
+        post = get_object_or_404(klass, pk=request.POST['delete_entry'])
         post.delete()
         return
 
     if 'update_entry' in request.POST:
-        post = get_object_or_404(LogEntry, pk=request.POST['update_entry'])
-        form = LogEntryForm(request.POST, instance=post)
-    else :
-        form = LogEntryForm(request.POST)
+        post = get_object_or_404(klass, pk=request.POST['update_entry'])
+        form = formKlass(request.POST, instance=post)
+    else:
+        # create
+        form = formKlass(request.POST)
     if form.is_valid():
         post = form.save(commit=False)
         post.author = request.user
@@ -51,6 +52,28 @@ def handle_post(request, date=None):
             year, month, day = date
             post.event_date = datetime.date(year, month, day)
         post.save()
+
+def todo_done(request):
+    if request.user.is_authenticated:
+        print(request.method)
+        if request.method == "POST":
+            post = get_object_or_404(ToDoEntry, pk=request.POST['done'])
+            post.mark_complete()
+            post.save()
+        return redirect('todo')
+    else:
+        return redirect('home')
+
+def todo(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
+        unfinished_todos = ToDoEntry.objects.filter(completed_at__isnull=True, author=request.user)
+        existing_forms = [ToDoForm(instance=li) for li in unfinished_todos]
+        new_form = ToDoForm()
+        return render(request, 'log/todo_list.html', {'new_form': new_form, 'existing_forms': existing_forms})
+    else:
+        return redirect('home')
 
 def csv_export(request):
     all_log_entries = LogEntry.objects.filter(author=request.user)

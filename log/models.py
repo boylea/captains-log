@@ -12,3 +12,18 @@ class LogEntry(models.Model):
 
     def __str__(self):
         return self.text
+
+class ToDoEntry(models.Model):
+    text = models.TextField()
+    completed_at = models.DateTimeField(null=True)
+    wont_do = models.DateTimeField(null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def mark_complete(self):
+        self.completed_at = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.text
