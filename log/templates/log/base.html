@@ -20,6 +20,11 @@
         <div class="d-flex p-2">
             <div class="mr-auto p-2"> <h1><a href="/">Captain's Log</a></h1></div>
             {% if user.is_authenticated %}
+            {% if request.path == "/todo" %}
+                <div class="p-2"><a href="{% url 'done_todos' %}">dones</a></div>
+            {% else %}
+                <div class="p-2"><a href="{% url 'todo' %}">todo</a></div>
+            {% endif %}
             <div class="p-2">{{ user.username }}</div>
             <div class="p-2"><a href="{% url 'logout' %}">logout</a></div>
             {% endif %}
