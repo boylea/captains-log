@@ -50,6 +50,7 @@
                 <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )" style="display:inline"><i class="fas fa-edit"></i></a></li>
                 <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
                     {{ entry }}
+                    <input type="hidden" name="pk" value={{entry.instance.pk}}>
                     <button type="submit" class="save btn btn-primary" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
                     <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_entry" value={{entry.instance.pk}}>Delete</button>
                 </form>

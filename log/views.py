@@ -36,27 +36,25 @@ def log_day(request, year, month, day):
 
 def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
     print(request.POST)
+    if 'pk' in request.POST:
+        post = get_object_or_404(klass, pk=request.POST['pk'])
+
     if 'delete_entry' in request.POST:
-        post = get_object_or_404(klass, pk=request.POST['delete_entry'])
         post.delete()
         return
     elif 'mark_done' in request.POST:
-        post = get_object_or_404(klass, pk=request.POST['mark_done'])
         post.mark_complete()
         LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
         return
     elif 'mark_wont' in request.POST:
-        post = get_object_or_404(klass, pk=request.POST['mark_wont'])
         post.mark_wont()
         return
     elif 'undo' in request.POST:
-        post = get_object_or_404(klass, pk=request.POST['undo'])
         post.unmark_complete()
         return
     elif 'new_entry' in request.POST:
         form = formKlass(request.POST)
     elif 'update_entry' in request.POST:
-        post = get_object_or_404(klass, pk=request.POST['update_entry'])
         form = formKlass(request.POST, instance=post)
     else:
         print("Found unknown post: ", request.POST)
