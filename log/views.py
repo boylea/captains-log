@@ -40,23 +40,24 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
         post = get_object_or_404(klass, pk=request.POST['delete_entry'])
         post.delete()
         return
-    elif 'update_entry' in request.POST:
-        post = get_object_or_404(klass, pk=request.POST['update_entry'])
-        form = formKlass(request.POST, instance=post)
     elif 'mark_done' in request.POST:
         post = get_object_or_404(klass, pk=request.POST['mark_done'])
         post.mark_complete()
-        form = formKlass(request.POST, instance=post)
+        LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
+        return
     elif 'mark_wont' in request.POST:
         post = get_object_or_404(klass, pk=request.POST['mark_wont'])
         post.mark_wont()
-        form = formKlass(request.POST, instance=post)
+        return
     elif 'undo' in request.POST:
         post = get_object_or_404(klass, pk=request.POST['undo'])
         post.unmark_complete()
-        form = formKlass(request.POST, instance=post)
+        return
     elif 'new_entry' in request.POST:
         form = formKlass(request.POST)
+    elif 'update_entry' in request.POST:
+        post = get_object_or_404(klass, pk=request.POST['update_entry'])
+        form = formKlass(request.POST, instance=post)
     else:
         print("Found unknown post: ", request.POST)
         return
@@ -68,8 +69,6 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
             year, month, day = date
             post.event_date = datetime.date(year, month, day)
         post.save()
-        if 'mark_done' in request.POST:
-            LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
 
 def todo(request):
     if request.user.is_authenticated:
