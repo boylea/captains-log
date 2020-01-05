@@ -1,0 +1,25 @@
+{% extends 'log/day_based.html' %}
+{% load template_tags %}
+
+{% block day_content %}
+    <div class="entry-list pt-2">
+        {% include "log/entries.html" with entries=existing_logs entry_type="log" %}
+    </div>
+    TODO:
+    <div class="entry-list pt-2">
+        {% include "log/entries.html" with entries=existing_todos entry_type="todo" %}
+    </div>
+    <div class="row">
+    <div class="col-6">
+        <p>
+        <form method="POST" class="new-entry-form">{% csrf_token %}
+            <label for="new-entry-text">New Entry:</label>
+            <input type="hidden" name="new_entry">
+            <input type="text" name="text" required id="new-entry-text">
+            <button type="submit" class="save btn btn-primary" name="type" value="log">Save Log Entry</button>
+            <button type="submit" class="save btn btn-primary" name="type" value="todo">Save Todo</button>
+        </form>
+        </p>
+    </div>
+
+{% endblock %}

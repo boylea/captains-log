@@ -8,5 +8,6 @@ urlpatterns = [
     path('done_todos', views.done_todos, name='done_todos'),
     path('export', views.csv_export, name='csv_export'),
     path('search', views.search, name='search'),
+    path('helm', views.helm, name='helm'),
     path('log_all', views.log_list, name='log_list'),
 ]

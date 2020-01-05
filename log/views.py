@@ -8,6 +8,30 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.db.models import Q
 
+def helm(request):
+    today = datetime.date.today()
+    year, month, day = today.year, today.month, today.day
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            if request.POST['type'] == 'log':
+                handle_post(request, (year, month, day))
+            elif request.POST['type'] == 'todo':
+                handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
+            else:
+                print("Unknown post type")
+
+        unfinished_todos = ToDoEntry.objects.filter(completed_at__isnull=True, wont_do__isnull=True, author=request.user)
+        existing_todo_forms = [ToDoForm(instance=li) for li in unfinished_todos]
+        new_todo_form = ToDoForm()
+
+        entries_for_day = LogEntry.objects.filter(event_date__exact=datetime.date(year, month, day), author=request.user)
+
+        existing_log_forms = [LogEntryForm(instance=li) for li in entries_for_day]
+
+        return render(request, 'log/helm.html', {'existing_logs': existing_log_forms, 'existing_todos': existing_todo_forms, 'date': (year, month, day)})
+    else:
+        return redirect('home')
+
 
 def log_list(request):
     print(request)
