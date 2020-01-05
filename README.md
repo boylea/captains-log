@@ -7,6 +7,8 @@ to install:
 
     $ pip install -r requirements.txt
 
+   You'll need to define the environment variables [DATABASE_URL](https://github.com/jacobian/dj-database-url) and [SECRET_KEY](https://docs.djangoproject.com/en/3.0/ref/settings/#secret-key). For local development, you may save these to a `.env` file and they will be pulled in by the settings.py.
+
 To deploy locally:
 
     $ python manage.py runserver
