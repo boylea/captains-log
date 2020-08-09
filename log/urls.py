@@ -10,4 +10,5 @@ urlpatterns = [
     path('search', views.search, name='search'),
     path('helm', views.helm, name='helm'),
     path('log_all', views.log_list, name='log_list'),
+    path('missions', views.mission_control, name='mission_control'),
 ]

@@ -6,7 +6,7 @@
     <s>
     {% endif %}
     <li id=title_{{entry.instance.pk}}>
-    {{ entry.instance.text }}
+    {{ entry.instance.name }}{{ entry.instance.text }}
     {% if entry.instance.wont_do %}
     </s>
     {% endif %}

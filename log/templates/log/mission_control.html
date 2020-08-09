@@ -9,8 +9,10 @@
     <div class="col-6">
         <p>
         <form method="POST" class="new-entry-form">{% csrf_token %}
-            <label for="{{ new_form.text.id_for_label }}">New Entry:</label>
-            <input type="text" name="text" required id="new-entry-text">
+            <label for="{{ new_form.name.id_for_label }}">New Mission:</label>
+            <input type="text" name="name" required id="new-entry-text">
+            <label for="{{ new_form.notes.id_for_label }}">Notes:</label>
+            <textarea type="textarea" name="notes" required id="new-entry-text"></textarea>
             <input type="hidden" name="type" value={{entry_type}}>
             <button type="submit" class="save btn btn-primary" name="new_entry">Save</button>
         </form>

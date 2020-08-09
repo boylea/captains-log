@@ -3,6 +3,19 @@ from django.db import models
 from django.utils import timezone
 
 
+class Mission(models.Model):
+    name = models.CharField(max_length=255)
+    notes = models.TextField()
+    completed_at = models.DateTimeField(null=True)
+    wont_do = models.DateTimeField(null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    completeable = True
+
+    def __str__(self):
+        return self.name
+
 class LogEntry(models.Model):
     text = models.TextField()
     event_date = models.DateField(default=timezone.now)
@@ -10,6 +23,7 @@ class LogEntry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completeable = False
+    mission = models.ForeignKey(Mission, blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.text
@@ -22,6 +36,7 @@ class ToDoEntry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completeable = True
+    mission = models.ForeignKey(Mission, blank=True, null=True, on_delete=models.CASCADE)
 
     def mark_complete(self):
         self.completed_at = timezone.now()

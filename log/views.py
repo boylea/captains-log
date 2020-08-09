@@ -2,8 +2,8 @@ import csv
 import datetime
 
 from django.shortcuts import render, get_object_or_404
-from .models import LogEntry, ToDoEntry
-from .forms import LogEntryForm, ToDoForm
+from .models import LogEntry, ToDoEntry, Mission
+from .forms import LogEntryForm, ToDoForm, MissionForm
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.db.models import Q
@@ -62,6 +62,8 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
     print(request.POST)
     if 'pk' in request.POST:
         post = get_object_or_404(klass, pk=request.POST['pk'])
+
+    # TODO: pull out associated mission if present
 
     if 'delete_entry' in request.POST:
         post.delete()
@@ -137,3 +139,25 @@ def search(request):
         return render(request, 'log/home.html', { 'query_string': query_string, 'entries': entries })
     else:
         return render(request, 'log/home.html')
+
+def mission_control(request):
+    today = datetime.date.today()
+    year, month, day = today.year, today.month, today.day
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            if request.POST['type'] == 'mission':
+                handle_post(request, klass=Mission, formKlass=MissionForm)
+            elif request.POST['type'] == 'log':
+                handle_post(request, (year, month, day))
+            elif request.POST['type'] == 'todo':
+                handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
+            else:
+                print("Unknown post type")
+
+        unfinished_missions = Mission.objects.filter(completed_at__isnull=True, wont_do__isnull=True, author=request.user)
+        existing_mission_forms = [MissionForm(instance=li) for li in unfinished_missions]
+        new_mission_form = MissionForm()
+
+        return render(request, 'log/mission_control.html', {'new_form': new_mission_form, 'existing_forms': existing_mission_forms, 'entry_type': 'mission', 'date': []})
+    else:
+        return redirect('home')
