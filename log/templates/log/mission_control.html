@@ -2,26 +2,35 @@
 {% load template_tags %}
 
 {% block day_content %}
-    <div class="entry-list pt-2">
+    <div class="accordion" id="mission-content">
         <ul>
         {% for entry in existing_forms %}
-            <div>
-            {{ entry.instance.name }}
-            {{ entry.instance.notes }}
+            <div class="card">
+            <div class="card-header" id="heading{{entry.instance.pk}}">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{entry.instance.pk}}" aria-expanded="true" aria-controls="collapse{{entry.instance.pk}}">
+                {{ entry.instance.name }}
+                </button>
+            </div>
 
-            {% for todo in entry.instance.todoentry_set.all %}
-                <li>{{todo}}</li>
-            {% endfor %}
+            <div id="collapse{{entry.instance.pk}}" class="collapse" aria-labelledby="heading{{entry.instance.pk}}" data-parent="#mission-content">
+            <div class="card-body">
+                {{ entry.instance.notes }}
 
-            {% include "log/completion_buttons.html" with entry=entry %}
-            <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )" style="display:inline"><i class="fas fa-edit"></i></a>
-            <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
-            {{ entry }}
-            <input type="hidden" name="pk" value={{entry.instance.pk}}>
-            <input type="hidden" name="type" value={{entry_type}}>
-            <button type="submit" class="save btn btn-primary" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
-            <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_entry" value={{entry.instance.pk}}>Delete</button>
-            </form>
+                {% for todo in entry.instance.todoentry_set.all %}
+                    <li>{{todo}}</li>
+                {% endfor %}
+
+                {% include "log/completion_buttons.html" with entry=entry %}
+                <a class="btn btn-sm btn-primary" href="javascript:unhide( {{entry.instance.pk}} )" style="display:inline"><i class="fas fa-edit"></i></a>
+                <form method="POST" id=edit_{{entry.instance.pk}} class="edit-entry-form" onkeyup="keyupEvent(event, {{entry.instance.pk}})" style="display: none;">{% csrf_token %}
+                {{ entry }}
+                <input type="hidden" name="pk" value={{entry.instance.pk}}>
+                <input type="hidden" name="type" value={{entry_type}}>
+                <button type="submit" class="save btn btn-primary" onclick="hide({{entry.instance.pk}})" name="update_entry" value={{entry.instance.pk}}>Save</button>
+                <button type="submit" class="save btn btn-danger" onclick="if (!confirm('Are you sure?')) return false;" name="delete_entry" value={{entry.instance.pk}}>Delete</button>
+                </form>
+            </div>
+            </div>
             </div>
         {% endfor %}
     </div>
