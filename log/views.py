@@ -63,14 +63,13 @@ def handle_post(request, date=None, klass=LogEntry, formKlass=LogEntryForm):
     if 'pk' in request.POST:
         post = get_object_or_404(klass, pk=request.POST['pk'])
 
-    # TODO: pull out associated mission if present
-
     if 'delete_entry' in request.POST:
         post.delete()
         return
     elif 'mark_done' in request.POST:
         post.mark_complete()
-        LogEntry.objects.create(author=request.user, text='Completed: ' + post.text)
+        completed_message = 'Completed: ' + post.text if hasattr(post, 'text') else post.name
+        LogEntry.objects.create(author=request.user, text=completed_message)
         return
     elif 'mark_wont' in request.POST:
         post.mark_wont()
@@ -150,7 +149,7 @@ def mission_control(request):
             elif request.POST['type'] == 'log':
                 handle_post(request, (year, month, day))
             elif request.POST['type'] == 'todo':
-                handle_post(request, klass=ToDoEntry, formKlass=ToDoForm)
+                handle_post(request, klass=Mission, formKlass=MissionForm)
             else:
                 print("Unknown post type")
 

@@ -1,5 +1,5 @@
 <form name={{name}}"_form" method="post" style="display:inline">{% csrf_token %}
    <input type="hidden" name="pk" value={{pk}}>
-   <input type="hidden" name="type" value="todo">
+   <input type="hidden" name="type" value={{entry_type}}>
    <button type="submit" class="btn btn-sm btn-primary" name={{name}} value={{pk}} style="display:inline">{{display_name}}</button>
 </form>
