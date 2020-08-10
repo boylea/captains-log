@@ -1,0 +1,8 @@
+{% load template_tags %}
+
+{% if entry.instance.completed_at or entry.instance.wont_do %}
+    {% entry_button 'undo' 'Undo' entry.instance.pk %}
+{% elif entry.instance.completeable %}
+    {% entry_button 'mark_done' 'Done' entry.instance.pk %}
+    {% entry_button 'mark_wont' "Won't Do" entry.instance.pk %}
+{% endif %}
