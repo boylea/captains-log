@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import include, url
 from . import views
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path('helm', views.helm, name='helm'),
     path('log_all', views.log_list, name='log_list'),
     path('missions', views.mission_control, name='mission_control'),
+    url('', include('django_prometheus.urls')),
 ]
