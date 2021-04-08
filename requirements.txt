@@ -1,6 +1,6 @@
 asgiref==3.3.1
 dj-database-url==0.5.0
-Django==3.1.7
+Django==3.1.8
 django-prometheus==2.1.0
 gunicorn==19.9.0
 newrelic==4.18.0.118
